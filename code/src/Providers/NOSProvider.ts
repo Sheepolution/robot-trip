@@ -105,9 +105,9 @@ export default class NOSProvider {
                         liveBlog.SetImageUrl(imgUrl);
                         liveBlog.SetImageCaption(imageCaption);
                     } else {
-                        const tweet = childQuery.find('.ext-twitter').first();
-                        if (tweet.length > 0) {
-                            liveBlog.AddUrl(tweet.attr('href'));
+                        const externalLink = childQuery.find('[class^="ext-"]').first();
+                        if (externalLink.length > 0) {
+                            liveBlog.AddUrl(externalLink.attr('href'));
                         }
                     }
                 }
