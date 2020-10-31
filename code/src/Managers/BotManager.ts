@@ -44,7 +44,7 @@ export default class BotManager {
                 if (urls.length > 0) {
                     MessageService.SendMessageToLiveBlogChannel(urls);
                 }
-                await Utils.Sleep(1);
+                await Utils.Sleep(Utils.GetMinutesInSeconds(1));
             }
         }
     }
