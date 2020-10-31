@@ -105,7 +105,7 @@ export default class NOSProvider {
                         liveBlog.SetImageUrl(imgUrl);
                         liveBlog.SetImageCaption(imageCaption);
                     } else {
-                        const externalLink = childQuery.find('[class^="ext-"]').first();
+                        const externalLink = childQuery.find('a[class*="ext-"]').first();
                         if (externalLink.length > 0) {
                             liveBlog.AddUrl(externalLink.attr('href'));
                         }
