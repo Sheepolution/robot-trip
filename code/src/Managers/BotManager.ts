@@ -16,7 +16,7 @@ export default class BotManager {
         await NOSProvider.GetLatestLiveBlogs();
         setInterval(() => {
             BotManager.SendLiveBlogs();
-        }, Utils.GetMinutesInMiliSeconds(10))
+        }, Utils.GetMinutesInMiliSeconds(2))
     }
 
     public static GetLiveBlogChannel() {
@@ -44,7 +44,7 @@ export default class BotManager {
                 if (urls.length > 0) {
                     MessageService.SendMessageToLiveBlogChannel(urls);
                 }
-                await Utils.Sleep(Utils.GetMinutesInSeconds(1));
+                await Utils.Sleep(15);
             }
         }
     }
