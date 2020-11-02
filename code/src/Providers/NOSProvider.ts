@@ -70,7 +70,9 @@ export default class NOSProvider {
                         var previousIndex = this.previousLiveBlogs.indexOf(previous);
                         this.previousLiveBlogs.splice(previousIndex, 1);
                         liveBlog.AddOldTitles(liveBlog.GetOldTitles());
-                        liveBlog.AddOldTitle(liveBlog.GetTitle());
+                        if (previous.GetTitle() != title) {
+                            liveBlog.AddOldTitle(liveBlog.GetTitle());
+                        }
                     }
 
                     liveBlog.AddText(text);
