@@ -39,6 +39,11 @@ export default class NOSEmbeds {
             embed.addField('Bekijk ook', seeAlsoText);
         }
 
+        const oldTitles = liveBlog.GetOldTitlesAsText();
+        if (oldTitles.length > 0) {
+            embed.addField('Afgekeurde titels', seeAlsoText);
+        }
+
         return embed;
     }
 }
