@@ -127,6 +127,9 @@ export default class NOSProvider {
 
                 liveBlogs.push(liveBlog);
                 this.previousLiveBlogs.push(liveBlog);
+                if (this.previousLiveBlogs.length > 10) {
+                    this.previousLiveBlogs.shift();
+                }
             }
         }
 
