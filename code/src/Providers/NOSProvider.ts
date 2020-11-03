@@ -69,9 +69,9 @@ export default class NOSProvider {
                         liveBlog.SetMessage(previous.GetMessage());
                         var previousIndex = this.previousLiveBlogs.indexOf(previous);
                         this.previousLiveBlogs.splice(previousIndex, 1);
-                        liveBlog.AddOldTitles(liveBlog.GetOldTitles());
+                        liveBlog.AddOldTitles(previous.GetOldTitles());
                         if (previous.GetTitle() != title) {
-                            liveBlog.AddOldTitle(liveBlog.GetTitle());
+                            liveBlog.AddOldTitle(previous.GetTitle());
                         }
                     }
 
