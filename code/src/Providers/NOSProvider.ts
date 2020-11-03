@@ -23,7 +23,7 @@ export default class NOSProvider {
 
     private static async GetLiveBlogUrls() {
         const html = await this.GetHomepageHTML();
-        const matches: Array<string> = Array.from(new Set(html.match(/(\/liveblog\/.+?\.html)/g)));
+        const matches: Array<string> = Array.from(new Set(html.match(/(?<=href=")\/(liveblog\/\d+?-|collectie\/\d+?\/liveblog\/).+?(?=")/g)));
         return matches;
     }
 
