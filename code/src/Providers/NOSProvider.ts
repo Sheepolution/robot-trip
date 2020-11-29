@@ -15,19 +15,35 @@ export default class NOSProvider {
         var urls = await this.GetLiveBlogUrls();
         var allLiveBlogs = new Array<LiveBlog>();
         for (const url of urls) {
-            allLiveBlogs = allLiveBlogs.concat(await this.GetLiveBlogsFromUrl(`${NOSConstants.BASE_URL}${url}`));
+            allLiveBlogs = allLiveBlogs.concat(await this.GetLiveBlogsFromUrl(`${NOSConstants.BASE_URL}${url}`, LiveBlogType.News));
+        }
+
+        return allLiveBlogs;
+    }
+
+    public static async GetLatestSportLiveBlogs() {
+        var urls = await this.GetSportLiveBlogUrls();
+        var allLiveBlogs = new Array<LiveBlog>();
+        for (const url of urls) {
+            allLiveBlogs = allLiveBlogs.concat(await this.GetLiveBlogsFromUrl(`${NOSConstants.BASE_URL}${url}`, LiveBlogType.Sport));
         }
 
         return allLiveBlogs;
     }
 
     private static async GetLiveBlogUrls() {
-        const html = await this.GetHomepageHTML();
+        const html = await this.GetNewsPageHTML();
         const matches: Array<string> = Array.from(new Set(html.match(/(?<=href=")\/(liveblog\/\d+?-|collectie\/\d+?\/liveblog\/).+?(?=")/g)));
         return matches;
     }
 
-    private static async GetLiveBlogsFromUrl(url: string) {
+    private static async GetSportLiveBlogUrls() {
+        const html = await this.GetSportsPageHTML();
+        const matches: Array<string> = Array.from(new Set(html.match(/(?<=href=")\/(liveblog\/\d+?-|collectie\/\d+?\/liveblog\/).+?(?=")/g)));
+        return matches;
+    }
+
+    private static async GetLiveBlogsFromUrl(url: string, liveBlogType:LiveBlogType) {
         const liveBlogs = new Array<LiveBlog>();
         const html = await this.GetHTML(url);
         var i = 0;
@@ -45,7 +61,7 @@ export default class NOSProvider {
             const body = blogQuery.find('.liveblog__elements');
 
             liveBlog.SetTitle(title);
-            liveBlog.SetType(LiveBlogType.News);
+            liveBlog.SetType(liveBlogType);
 
             for (const child of body.children()) {
                 const childQuery = $(child);
@@ -133,8 +149,12 @@ export default class NOSProvider {
         return liveBlogs;
     }
 
-    private static async GetHomepageHTML() {
+    private static async GetNewsPageHTML() {
         return await this.GetHTML(`${NOSConstants.BASE_URL}/nieuws/`);
+    }
+
+    private static async GetSportsPageHTML() {
+        return await this.GetHTML(`${NOSConstants.BASE_URL}/sport/`);
     }
 
     private static async GetHTML(url: string) {
