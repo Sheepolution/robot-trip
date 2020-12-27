@@ -11,5 +11,5 @@ export default class SettingsConstants {
     public static readonly ADMIN_ID = process.env.ADMIN_ID || '';
     public static readonly LIVE_BLOG_CHANNEL_ID = process.env.LIVE_BLOG_CHANNEL_ID || '';
     public static readonly SPORTS_CHANNEL_ID = process.env.SPORTS_CHANNEL_ID || '';
-
+    public static readonly SPORTS_ENABLED = process.env.SPORTS_ENABLED == 'true' || false;
 }

@@ -26,6 +26,11 @@ export default class BotManager {
             BotManager.SendNewsLiveBlogs();
         }, Utils.GetMinutesInMiliSeconds(2))
 
+        if (SettingsConstants.SPORTS_ENABLED) {
+            setInterval(() => {
+                BotManager.SendSportLiveBlogs();
+            }, Utils.GetMinutesInMiliSeconds(5))
+        }
     }
 
     public static GetLiveBlogChannel() {
