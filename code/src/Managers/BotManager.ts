@@ -21,7 +21,6 @@ export default class BotManager {
         BotManager.liveBlogChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.LIVE_BLOG_CHANNEL_ID);
         BotManager.sportsChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.SPORTS_CHANNEL_ID);
         BotManager.top2KChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.TOP_2K_CHANNEL_ID);
-        BotManager.SendNewsLiveBlogs();
 
         await NOSProvider.GetLatestLiveBlogs();
         await NOSProvider.GetLatestSportLiveBlogs();
