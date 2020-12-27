@@ -12,6 +12,10 @@ export default class MessageService {
         return await this.SendMessage(BotManager.GetSportsChannel(), message, embed);
     }
 
+    public static async SendMessageToTop2KChannel(message:string, embed?:MessageEmbed) {
+        return await this.SendMessage(BotManager.GetTop2KChannel(), message, embed);
+    }
+
     private static async SendMessage(channel:TextChannel, message:string, embed?:MessageEmbed) {
         return await DiscordService.SendMessage(channel, message, embed)
     }

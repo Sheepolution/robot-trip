@@ -7,18 +7,27 @@ import { Message, TextChannel } from 'discord.js';
 import { Utils } from '../Utils/Utils';
 import LiveBlog from '../Objects/LiveBlog';
 import { LiveBlogType } from '../Enums/LiveBlogType';
+import Top2KProvider from '../Providers/Top2KProvider';
+import Top2KEmbeds from '../Embeds/Top2KEmbeds';
 
 export default class BotManager {
 
     private static liveBlogChannel:TextChannel;
     private static sportsChannel:TextChannel;
+    private static top2KChannel:TextChannel;
 
     public static async OnReady() {
         console.log('Robot Trip: Connected');
         BotManager.liveBlogChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.LIVE_BLOG_CHANNEL_ID);
         BotManager.sportsChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.SPORTS_CHANNEL_ID);
+        BotManager.top2KChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.TOP_2K_CHANNEL_ID);
+        BotManager.SendNewsLiveBlogs();
+
         await NOSProvider.GetLatestLiveBlogs();
         await NOSProvider.GetLatestSportLiveBlogs();
+
+        await Top2KProvider.GetTop2KList();
+        await Top2KProvider.GetNewCurrentSong();
 
         setInterval(() => {
             BotManager.SendNewsLiveBlogs();
@@ -27,6 +36,10 @@ export default class BotManager {
         setInterval(() => {
             BotManager.SendSportLiveBlogs();
         }, Utils.GetMinutesInMiliSeconds(5))
+
+        setInterval(() => {
+            BotManager.SendTop2KUpdates();
+        }, Utils.GetMinutesInMiliSeconds(1))
     }
 
     public static GetLiveBlogChannel() {
@@ -37,6 +50,10 @@ export default class BotManager {
         return BotManager.sportsChannel;
     }
 
+    public static GetTop2KChannel() {
+        return BotManager.top2KChannel;
+    }
+
     public static async SendNewsLiveBlogs() {
         const liveBlogs = (await NOSProvider.GetLatestLiveBlogs()).reverse();
         this.SendLiveBlogs(liveBlogs);
@@ -45,6 +62,16 @@ export default class BotManager {
     public static async SendSportLiveBlogs() {
         const liveBlogs = (await NOSProvider.GetLatestSportLiveBlogs()).reverse();
         this.SendLiveBlogs(liveBlogs);
+    }
+
+    public static async SendTop2KUpdates() {
+        const newSong = await Top2KProvider.GetNewCurrentSong();
+        if (newSong != null) {
+            const song = Top2KProvider.GetSongObject();
+            if (song != null) {
+                MessageService.SendMessageToTop2KChannel('', Top2KEmbeds.GetSongEmbed(song));
+            }
+        }
     }
 
     private static async SendLiveBlogs(liveBlogs:Array<LiveBlog>) {
