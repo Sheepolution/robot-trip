@@ -47,7 +47,7 @@ export default class Top2KProvider {
     private static GetSongData() {
         var songData = this.list.find((s: any) => s.aid == this.currentSongId || s.s + s.a == this.currentSongId);
         if (songData == null) {
-            songData = this.list[this.currentPosition];
+            songData = this.list[this.currentPosition - 1];
         }
         return songData;
     }
