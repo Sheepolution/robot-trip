@@ -1,4 +1,5 @@
 import { Message } from 'discord.js';
+import NOSConstants from '../Constants/NOSConstants';
 import { LiveBlogType } from '../Enums/LiveBlogType';
 
 export default class LiveBlog {
@@ -44,6 +45,15 @@ export default class LiveBlog {
                 return 'NOS Liveblog';
             case LiveBlogType.Sport:
                 return 'NOS Liveblog - Sport';
+        }
+    }
+
+    public GetIcon() {
+        switch (this.type) {
+            case LiveBlogType.News:
+                return NOSConstants.ICONS.NEWS
+            case LiveBlogType.Sport:
+                return NOSConstants.ICONS.SPORT
         }
     }
 

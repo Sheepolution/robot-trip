@@ -1,8 +1,11 @@
 export default class NOSConstants {
-    public static BASE_URL = 'https://nos.nl';
+    public static readonly BASE_URL = 'https://nos.nl';
+
+    public static readonly EMBED_COLOR = '#e61e14';
 
     public static readonly ICONS = {
-        NEWS: 'https://media.discordapp.net/attachments/440212728619991040/687617902819803186/nos.jpg',
+        NEWS: 'https://cdn.discordapp.com/attachments/795338951317127220/795344837284069407/nieuws.png',
+        SPORT: 'https://cdn.discordapp.com/attachments/795338951317127220/795344927776964688/sport.png',
     }
 
     public static readonly TYPES = {

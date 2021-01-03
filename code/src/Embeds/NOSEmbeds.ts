@@ -1,5 +1,4 @@
 import NOSConstants from '../Constants/NOSConstants';
-import SettingsConstants from '../Constants/SettingsConstants';
 import { MessageEmbed } from 'discord.js';
 import LiveBlog from '../Objects/LiveBlog';
 
@@ -7,8 +6,8 @@ export default class NOSEmbeds {
 
     public static GetLiveBlogEmbed(liveBlog:LiveBlog) {
         const embed = new MessageEmbed()
-            .setColor(SettingsConstants.COLORS.DEFAULT)
-            .setAuthor(liveBlog.GetTypeText(), NOSConstants.ICONS.NEWS)
+            .setColor(NOSConstants.EMBED_COLOR)
+            .setAuthor(liveBlog.GetTypeText(), liveBlog.GetIcon())
             .setTitle(liveBlog.GetTitle())
 
         const text = liveBlog.GetText();
