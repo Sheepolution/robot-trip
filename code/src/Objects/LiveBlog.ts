@@ -25,7 +25,7 @@ export default class LiveBlog {
     }
 
     public GetId() {
-        return this.title;
+        return this.id;
     }
 
     public SetId(id:string) {
