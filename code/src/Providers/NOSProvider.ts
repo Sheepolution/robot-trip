@@ -53,45 +53,28 @@ export default class NOSProvider {
                 break;
             }
 
-            var success = true;
-
             const blogQuery = $(liveBlogHTML);
             var liveBlog = new LiveBlog();
+            const id = blogQuery.attr('id').substr('UPDATE-container-'.length);
             const title = blogQuery.find('.liveblog__update__title.js-liveblog-update-title').text();
             const body = blogQuery.find('.liveblog__elements');
 
+            liveBlog.SetId(id);
             liveBlog.SetTitle(title);
             liveBlog.SetType(liveBlogType);
 
             for (const child of body.children()) {
                 const childQuery = $(child);
                 if (childQuery.is('p')) {
-                    var text = childQuery.text();
+                    var paragraph = childQuery.text();
                     for (const aTag of childQuery.find('a')) {
                         const aTagQuery = $(aTag);
                         const replace = aTagQuery.text();
                         const url = aTagQuery.attr('href');
-                        text = text.replace(replace, `[${replace}](${url})`);
+                        paragraph = paragraph.replace(replace, `[${replace}](${url})`);
                     }
 
-                    var previous = this.previousLiveBlogs.find(p => p.GetTitle() == title || p.GetFirstText() == text);
-                    if (previous != null) {
-                        if (previous.GetTitle() == title && previous.GetFirstText() == text) {
-                            // We've already posted this liveblog and it seems to be exactly the same.
-                            success = false;
-                            break;
-                        }
-
-                        liveBlog.SetMessage(previous.GetMessage());
-                        var previousIndex = this.previousLiveBlogs.indexOf(previous);
-                        this.previousLiveBlogs.splice(previousIndex, 1);
-                        liveBlog.AddOldTitles(previous.GetOldTitles());
-                        if (previous.GetTitle() != title) {
-                            liveBlog.AddOldTitle(previous.GetTitle());
-                        }
-                    }
-
-                    liveBlog.AddText(text);
+                    liveBlog.AddText(paragraph);
                 } else if (childQuery.is('div')) {
                     if (childQuery.hasClass('block_image')) {
                         const imgUrl = childQuery.find('img').attr('src');
@@ -131,19 +114,24 @@ export default class NOSProvider {
                 }
             }
 
-            if (success) {
-                const text = liveBlog.GetText();
-                if (text == null) {
-                    var previous = this.previousLiveBlogs.find(p => p.GetTitle() == title);
-                    if (previous != null) {
-                        continue;
-                    }
-
+            var previous = this.previousLiveBlogs.find(p => p.GetId() == id);
+            if (previous != null) {
+                if (previous.GetTitle() == title && previous.GetText() == liveBlog.GetText()) {
+                    // We've already posted this live blog and it seems to be exactly the same.
+                    continue;
                 }
 
-                liveBlogs.push(liveBlog);
-                this.previousLiveBlogs.push(liveBlog);
+                liveBlog.SetMessage(previous.GetMessage());
+                var previousIndex = this.previousLiveBlogs.indexOf(previous);
+                this.previousLiveBlogs.splice(previousIndex, 1);
+                liveBlog.AddOldTitles(previous.GetOldTitles());
+                if (!previous.GetOldTitles().includes(title)) {
+                    liveBlog.AddOldTitle(previous.GetTitle());
+                }
             }
+
+            liveBlogs.push(liveBlog);
+            this.previousLiveBlogs.push(liveBlog);
         }
 
         return liveBlogs;

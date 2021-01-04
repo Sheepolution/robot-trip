@@ -4,6 +4,7 @@ import { LiveBlogType } from '../Enums/LiveBlogType';
 
 export default class LiveBlog {
 
+    private id:string;
     private title:string;
     private firstText:string;
     private text:string;
@@ -21,6 +22,14 @@ export default class LiveBlog {
         this.urls = new Array<string>();
         this.seeAlsoList = new Array<string>();
         this.oldTitles = new Array<string>();
+    }
+
+    public GetId() {
+        return this.title;
+    }
+
+    public SetId(id:string) {
+        this.id = id;
     }
 
     public GetTitle() {
