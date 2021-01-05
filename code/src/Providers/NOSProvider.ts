@@ -125,8 +125,9 @@ export default class NOSProvider {
                 var previousIndex = this.previousLiveBlogs.indexOf(previous);
                 this.previousLiveBlogs.splice(previousIndex, 1);
                 liveBlog.AddOldTitles(previous.GetOldTitles());
-                if (!previous.GetOldTitles().includes(title)) {
-                    liveBlog.AddOldTitle(previous.GetTitle());
+                const previousTitle = previous.GetTitle();
+                if (previousTitle != title && !liveBlog.GetOldTitles().includes(previousTitle)) {
+                    liveBlog.AddOldTitle(previousTitle);
                 }
             }
 
