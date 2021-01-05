@@ -15,17 +15,19 @@ This bot is hosted on a [Discord server](https://discord.gg/b5adKRGQ3w) where yo
 ## Hosting the bot
 
 1. Install [Node.js](https://nodejs.org/en/)
-2. Open a terminal and navigate to the code folder
+2. Open a terminal and navigate to the `code`folder
 3. Run `npm install` to install all the dependencies.
 4. Run `npm run-script build`
-5. Make sure you have an `.env` file. See example file below.
+5. Make sure you have an `.env` file in your `code`directory. See example file below.
 6. Run `npm run-script start`
 
 ### Example .env file
 
-TOKEN=[Your Discord bot's token]
+```bash
+TOKEN=[Discord bot token]
 
 CHANNEL_NEWS_ID=[Channel where to post news liveblogs]
 
 CHANNEL_SPORTS_ID=[Channel where to post sports liveblogs]
+```
 
