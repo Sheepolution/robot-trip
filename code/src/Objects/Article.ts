@@ -38,9 +38,9 @@ export default class LiveBlog {
     public GetTypeText() {
         switch (this.type) {
             case NewsType.News:
-                return 'NOS Liveblog';
+                return 'NOS Nieuws';
             case NewsType.Sport:
-                return 'NOS Liveblog - Sport';
+                return 'NOS Sport';
         }
     }
 
