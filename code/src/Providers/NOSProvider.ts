@@ -161,7 +161,7 @@ export default class NOSProvider {
             const title = articleQuery.find('.list-items__title').text();
             const text = articleQuery.find('.list-items__description').text();
             const imgUrl = articleQuery.find('.list-items__image').attr('src');
-            const categories = articleQuery.find('.list-items__category').text().slice(2).trim().replace(/[\s]+/g, ' ').replace(',', '').split(' ');
+            const categories = articleQuery.find('.list-items__category').text().slice(2).trim().replace(/[\s]{2,}/g, '_').replace(',', '').split('_');
 
             if (!url.startsWith('/artikel/')) {
                 continue;
