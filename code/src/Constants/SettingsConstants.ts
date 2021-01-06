@@ -1,6 +1,7 @@
 export default class SettingsConstants {
     public static readonly CHANNEL_NEWS_ID = process.env.CHANNEL_NEWS_ID || '';
     public static readonly CHANNEL_SPORTS_ID = process.env.CHANNEL_SPORTS_ID || '';
+    public static readonly CHANNEL_OVERZICHT_ID = process.env.CHANNEL_OVERZICHT_ID || '';
     public static readonly CHANNEL_BINNENLAND_ID = process.env.CHANNEL_BINNENLAND_ID || '';
     public static readonly CHANNEL_BUITENLAND_ID = process.env.CHANNEL_BUITENLAND_ID || '';
     public static readonly CHANNEL_REGIONAAL_ID = process.env.CHANNEL_REGIONAAL_ID || '';

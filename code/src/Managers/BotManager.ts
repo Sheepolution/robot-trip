@@ -14,6 +14,7 @@ export default class BotManager {
 
     private static liveBlogChannel:TextChannel;
     private static sportsChannel:TextChannel;
+    private static overzichtChannel:TextChannel;
     private static binnenlandChannel:TextChannel;
     private static buitenlandChannel:TextChannel;
     private static cultuurChannel:TextChannel;
@@ -28,6 +29,7 @@ export default class BotManager {
         console.log('Robot Trip: Connected');
         BotManager.liveBlogChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CHANNEL_NEWS_ID);
         BotManager.sportsChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CHANNEL_SPORTS_ID);
+        BotManager.overzichtChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CHANNEL_OVERZICHT_ID)
         BotManager.binnenlandChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CHANNEL_BINNENLAND_ID)
         BotManager.buitenlandChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CHANNEL_BUITENLAND_ID)
         BotManager.cultuurChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CHANNEL_CULTUUR_ID)
@@ -173,8 +175,17 @@ export default class BotManager {
                     await Utils.Sleep(5);
                     await message.crosspost();
 
-                    await Utils.Sleep(15);
+                    await Utils.Sleep(5);
                 }
+
+                const message = await MessageService.SendMessage(this.overzichtChannel, '', embed);
+
+                article.AddMessage(message);
+
+                await Utils.Sleep(5);
+                await message.crosspost();
+
+                await Utils.Sleep(15);
             }
         }
     }
