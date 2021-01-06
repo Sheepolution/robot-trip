@@ -12,7 +12,7 @@ export default class MessageService {
         return await this.SendMessage(BotManager.GetSportsChannel(), message, embed);
     }
 
-    private static async SendMessage(channel:TextChannel, message:string, embed?:MessageEmbed) {
+    public static async SendMessage(channel:TextChannel, message:string, embed?:MessageEmbed) {
         return await DiscordService.SendMessage(channel, message, embed)
     }
 }

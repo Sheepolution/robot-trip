@@ -1,10 +1,11 @@
 import NOSConstants from '../Constants/NOSConstants';
 import { MessageEmbed } from 'discord.js';
 import LiveBlog from '../Objects/LiveBlog';
+import Article from '../Objects/Article';
 
 export default class NOSEmbeds {
 
-    public static GetLiveBlogEmbed(liveBlog:LiveBlog) {
+    public static GetLiveBlogEmbed(liveBlog: LiveBlog) {
         const embed = new MessageEmbed()
             .setColor(NOSConstants.EMBED_COLOR)
             .setAuthor(liveBlog.GetTypeText(), liveBlog.GetIcon())
@@ -42,6 +43,18 @@ export default class NOSEmbeds {
         if (oldTitlesText.length > 0) {
             embed.addField('Afgekeurde titels', oldTitlesText);
         }
+
+        return embed;
+    }
+
+    public static GetArticleEmbed(article: Article) {
+        const embed = new MessageEmbed()
+            .setColor(NOSConstants.EMBED_COLOR)
+            .setAuthor(article.GetTypeText(), article.GetIcon())
+            .setTitle(article.GetTitle())
+            .setThumbnail(article.GetImageUrl())
+            .setDescription(`${article.GetText()}\n[Lees verder](${article.GetUrl()})`)
+            .setFooter(article.GetCategoriesText());
 
         return embed;
     }

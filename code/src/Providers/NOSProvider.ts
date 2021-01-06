@@ -1,5 +1,6 @@
 import NOSConstants from '../Constants/NOSConstants';
-import { LiveBlogType } from '../Enums/LiveBlogType';
+import { NewsType } from '../Enums/NewsType';
+import Article from '../Objects/Article';
 import LiveBlog from '../Objects/LiveBlog';
 
 var fetch = require('node-fetch');
@@ -10,12 +11,14 @@ const $ = require('jquery')(window);
 export default class NOSProvider {
 
     private static previousLiveBlogs: Array<LiveBlog> = new Array<LiveBlog>();
+    private static previousArticles: Array<Article> = new Array<Article>();
+    private static newsHtml: string;
 
     public static async GetLatestLiveBlogs() {
         var urls = await this.GetLiveBlogUrls();
         var allLiveBlogs = new Array<LiveBlog>();
         for (const url of urls) {
-            allLiveBlogs = allLiveBlogs.concat(await this.GetLiveBlogsFromUrl(`${NOSConstants.BASE_URL}${url}`, LiveBlogType.News));
+            allLiveBlogs = allLiveBlogs.concat(await this.GetLiveBlogsFromUrl(`${NOSConstants.BASE_URL}${url}`, NewsType.News));
         }
 
         return allLiveBlogs;
@@ -25,10 +28,14 @@ export default class NOSProvider {
         var urls = await this.GetSportLiveBlogUrls();
         var allLiveBlogs = new Array<LiveBlog>();
         for (const url of urls) {
-            allLiveBlogs = allLiveBlogs.concat(await this.GetLiveBlogsFromUrl(`${NOSConstants.BASE_URL}${url}`, LiveBlogType.Sport));
+            allLiveBlogs = allLiveBlogs.concat(await this.GetLiveBlogsFromUrl(`${NOSConstants.BASE_URL}${url}`, NewsType.Sport));
         }
 
         return allLiveBlogs;
+    }
+
+    public static async GetLatestArticles() {
+        return (await this.GetArticlesFromHtml(this.newsHtml, NewsType.News)).reverse();
     }
 
     private static async GetLiveBlogUrls() {
@@ -43,7 +50,7 @@ export default class NOSProvider {
         return matches;
     }
 
-    private static async GetLiveBlogsFromUrl(url: string, liveBlogType:LiveBlogType) {
+    private static async GetLiveBlogsFromUrl(url: string, newsType:NewsType) {
         const liveBlogs = new Array<LiveBlog>();
         const html = await this.GetHTML(url);
         var i = 0;
@@ -61,7 +68,7 @@ export default class NOSProvider {
 
             liveBlog.SetId(id);
             liveBlog.SetTitle(title);
-            liveBlog.SetType(liveBlogType);
+            liveBlog.SetType(newsType);
 
             for (const child of body.children()) {
                 const childQuery = $(child);
@@ -138,8 +145,62 @@ export default class NOSProvider {
         return liveBlogs;
     }
 
+    private static async GetArticlesFromHtml(html: string, newsType:NewsType) {
+        const articles = new Array<Article>();
+
+        var i = 0;
+        for (const listHtml of $(html).find('.list-items__item')) {
+            i += 1;
+            if (i >= 6) {
+                break;
+            }
+
+            const articleQuery = $(listHtml);
+            var article = new Article();
+            const url = articleQuery.find('a').attr('href');
+            const title = articleQuery.find('.list-items__title').text();
+            const text = articleQuery.find('.list-items__description').text();
+            const imgUrl = articleQuery.find('.list-items__image').attr('src');
+            const categories = articleQuery.find('.list-items__category').text().slice(2).trim().replace(/[\s]+/g, ' ').replace(',', '').split(' ');
+
+            if (!url.startsWith('/artikel/')) {
+                continue;
+            }
+
+            const id = url.substring('/artikel/'.length, url.indexOf('-'));
+
+            article.SetId(id);
+            article.SetTitle(title);
+            article.SetText(text);
+
+            var previous = this.previousArticles.find(p => p.GetId() == id);
+            if (previous != null) {
+                if (previous.GetTitle() == title && previous.GetText() == text) {
+                    // We've already posted this article and it seems to be exactly the same.
+                    continue;
+                }
+
+                article.SetMessages(previous.GetMessages());
+                var previousIndex = this.previousArticles.indexOf(previous);
+                this.previousArticles.splice(previousIndex, 1);
+            }
+
+            article.SetType(newsType);
+            article.SetCategories(categories);
+            article.SetUrl(`${NOSConstants.BASE_URL}${url}`);
+            article.SetImageUrl(imgUrl);
+
+            articles.push(article);
+            this.previousArticles.push(article);
+        }
+
+        return articles;
+    }
+
     private static async GetNewsPageHTML() {
-        return await this.GetHTML(`${NOSConstants.BASE_URL}/nieuws/`);
+        const html = await this.GetHTML(`${NOSConstants.BASE_URL}/nieuws/`);
+        this.newsHtml = html;
+        return html;
     }
 
     private static async GetSportsPageHTML() {

@@ -1,6 +1,6 @@
 # Robot Trip
 
-A Discord bot for posting NOS Liveblog posts in Discord.
+A Discord bot for posting NOS Liveblogs and article summaries in Discord.
 
 This bot is hosted on a [Discord server](https://discord.gg/b5adKRGQ3w) where you are able to subscribe to the channels to send the bot's messages to a channel in your own server. Leaving the server after doing so will not remove the subscription.
 
@@ -25,9 +25,16 @@ This bot is hosted on a [Discord server](https://discord.gg/b5adKRGQ3w) where yo
 
 ```bash
 TOKEN=[Discord bot token]
-
 CHANNEL_NEWS_ID=[Channel where to post news liveblogs]
-
 CHANNEL_SPORTS_ID=[Channel where to post sports liveblogs]
+CHANNEL_BINNENLAND_ID=[etc.]
+CHANNEL_BUITENLAND_ID=123
+CHANNEL_REGIONAAL_ID=123
+CHANNEL_POLITIEK_ID=123
+CHANNEL_ECONOMIE_ID=123
+CHANNEL_KONINGSHUIS_ID=123
+CHANNEL_TECH_ID=123
+CHANNEL_CULTUUR_ID=123
+CHANNEL_OPMERKELIJK_ID=123
 ```
 

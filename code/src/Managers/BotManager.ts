@@ -6,23 +6,46 @@ import SettingsConstants from '../Constants/SettingsConstants';
 import { Message, TextChannel } from 'discord.js';
 import { Utils } from '../Utils/Utils';
 import LiveBlog from '../Objects/LiveBlog';
-import { LiveBlogType } from '../Enums/LiveBlogType';
+import { NewsType } from '../Enums/NewsType';
+import Article from '../Objects/Article';
+import { ArticleCategories } from '../Enums/NewsCategories';
 
 export default class BotManager {
 
     private static liveBlogChannel:TextChannel;
     private static sportsChannel:TextChannel;
+    private static binnenlandChannel:TextChannel;
+    private static buitenlandChannel:TextChannel;
+    private static cultuurChannel:TextChannel;
+    private static economieChannel:TextChannel;
+    private static koningshuisChannel:TextChannel;
+    private static opmerkelijkChannel:TextChannel;
+    private static politiekChannel:TextChannel;
+    private static techChannel:TextChannel;
+    private static regionaalChannel:TextChannel;
 
     public static async OnReady() {
         console.log('Robot Trip: Connected');
         BotManager.liveBlogChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CHANNEL_NEWS_ID);
         BotManager.sportsChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CHANNEL_SPORTS_ID);
+        BotManager.binnenlandChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CHANNEL_BINNENLAND_ID)
+        BotManager.buitenlandChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CHANNEL_BUITENLAND_ID)
+        BotManager.cultuurChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CHANNEL_CULTUUR_ID)
+        BotManager.economieChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CHANNEL_ECONOMIE_ID)
+        BotManager.koningshuisChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CHANNEL_KONINGSHUIS_ID)
+        BotManager.opmerkelijkChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CHANNEL_OPMERKELIJK_ID)
+        BotManager.politiekChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CHANNEL_POLITIEK_ID)
+        BotManager.techChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CHANNEL_TECH_ID)
+        BotManager.regionaalChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CHANNEL_REGIONAAL_ID)
 
         await NOSProvider.GetLatestLiveBlogs();
         await NOSProvider.GetLatestSportLiveBlogs();
+        await NOSProvider.GetLatestArticles();
 
-        setInterval(() => {
+        setInterval(async () => {
             BotManager.SendNewsLiveBlogs();
+            await Utils.Sleep(7);
+            BotManager.SendNewsArticles();
         }, Utils.GetMinutesInMiliSeconds(2))
 
         setInterval(() => {
@@ -48,6 +71,11 @@ export default class BotManager {
         this.SendLiveBlogs(liveBlogs);
     }
 
+    public static async SendNewsArticles() {
+        const articles = (await NOSProvider.GetLatestArticles()).reverse();
+        this.SendArticles(articles);
+    }
+
     private static async SendLiveBlogs(liveBlogs:Array<LiveBlog>) {
         for (const liveBlog of liveBlogs) {
             const oldMessage = liveBlog.GetMessage();
@@ -62,7 +90,7 @@ export default class BotManager {
 
             if (oldMessage == null) {
                 var message:Message;
-                if (liveBlog.GetType() == LiveBlogType.News) {
+                if (liveBlog.GetType() == NewsType.News) {
                     message = await MessageService.SendMessageToLiveBlogChannel('', NOSEmbeds.GetLiveBlogEmbed(liveBlog));
                 } else {
                     message = await MessageService.SendMessageToSportsChannel('', NOSEmbeds.GetLiveBlogEmbed(liveBlog));
@@ -70,13 +98,13 @@ export default class BotManager {
 
                 liveBlog.SetMessage(message);
 
-                await Utils.Sleep(2);
+                await Utils.Sleep(5);
                 await message.crosspost();
 
                 const urls = liveBlog.GetUrlsAsText();
                 if (urls.length > 0) {
                     var additionalMessage:Message;
-                    if (liveBlog.GetType() == LiveBlogType.News) {
+                    if (liveBlog.GetType() == NewsType.News) {
                         additionalMessage = await MessageService.SendMessageToLiveBlogChannel(urls);
                     } else {
                         additionalMessage = await MessageService.SendMessageToSportsChannel(urls);
@@ -87,6 +115,66 @@ export default class BotManager {
                 }
 
                 await Utils.Sleep(15);
+            }
+        }
+    }
+
+    private static async SendArticles(articles:Array<Article>) {
+        for (const article of articles) {
+            const oldMessages = article.GetMessages();
+
+            if (oldMessages.length > 0) {
+                for (const oldMessage of oldMessages) {
+                    await oldMessage.edit('', NOSEmbeds.GetArticleEmbed(article));
+                    await Utils.Sleep(3);
+                }
+            } else {
+                const embed = NOSEmbeds.GetArticleEmbed(article);
+
+                for (const category of article.GetCategories()) {
+                    var channel:TextChannel;
+
+                    switch (category) {
+                        case ArticleCategories.Binnenland:
+                            channel = this.binnenlandChannel;
+                            break;
+                        case ArticleCategories.Buitenland:
+                            channel = this.buitenlandChannel;
+                            break;
+                        case ArticleCategories.Cultuur:
+                            channel = this.cultuurChannel;
+                            break;
+                        case ArticleCategories.Economie:
+                            channel = this.economieChannel;
+                            break;
+                        case ArticleCategories.Koningshuis:
+                            channel = this.koningshuisChannel;
+                            break;
+                        case ArticleCategories.Opmerkelijk:
+                            channel = this.opmerkelijkChannel;
+                            break;
+                        case ArticleCategories.Politiek:
+                            channel = this.politiekChannel;
+                            break;
+                        case ArticleCategories.Regionaal:
+                            channel = this.regionaalChannel;
+                            break;
+                        case ArticleCategories.Tech:
+                            channel = this.techChannel;
+                            break;
+                        default:
+                            channel = this.binnenlandChannel;
+                    }
+
+                    const message = await MessageService.SendMessage(channel, '', embed);
+
+                    article.AddMessage(message);
+
+                    await Utils.Sleep(5);
+                    await message.crosspost();
+
+                    await Utils.Sleep(15);
+                }
             }
         }
     }

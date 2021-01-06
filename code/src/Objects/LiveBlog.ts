@@ -1,6 +1,6 @@
 import { Message } from 'discord.js';
 import NOSConstants from '../Constants/NOSConstants';
-import { LiveBlogType } from '../Enums/LiveBlogType';
+import { NewsType } from '../Enums/NewsType';
 
 export default class LiveBlog {
 
@@ -8,7 +8,7 @@ export default class LiveBlog {
     private title:string;
     private firstText:string;
     private text:string;
-    private type:LiveBlogType;
+    private type:NewsType;
     private imageUrl:string;
     private imageCaption:string;
     private videoUrl:string;
@@ -50,23 +50,23 @@ export default class LiveBlog {
 
     public GetTypeText() {
         switch (this.type) {
-            case LiveBlogType.News:
+            case NewsType.News:
                 return 'NOS Liveblog';
-            case LiveBlogType.Sport:
+            case NewsType.Sport:
                 return 'NOS Liveblog - Sport';
         }
     }
 
     public GetIcon() {
         switch (this.type) {
-            case LiveBlogType.News:
+            case NewsType.News:
                 return NOSConstants.ICONS.NEWS
-            case LiveBlogType.Sport:
+            case NewsType.Sport:
                 return NOSConstants.ICONS.SPORT
         }
     }
 
-    public SetType(type:LiveBlogType) {
+    public SetType(type:NewsType) {
         this.type = type;
     }
 
