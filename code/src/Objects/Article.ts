@@ -108,7 +108,7 @@ export default class LiveBlog {
                     break;
                 case 'Tech': this.categories.push(ArticleCategories.Tech);
                     break;
-                case 'Cultuur': this.categories.push(ArticleCategories.Cultuur);
+                case 'Cultuur & Media': this.categories.push(ArticleCategories.Cultuur);
                     break;
                 case 'Opmerkelijk': this.categories.push(ArticleCategories.Opmerkelijk);
                     break;
