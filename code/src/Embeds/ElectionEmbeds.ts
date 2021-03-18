@@ -7,7 +7,7 @@ export default class ElectionEmbeds {
     public static GetElectionResultEmbed(electionResult: ElectionResult) {
         const embed = new MessageEmbed()
             .setColor(NOSConstants.EMBED_COLOR)
-            .setAuthor('Tweedekamer Verkiezingen 2021')
+            .setAuthor('Tweede Kamerverkiezingen 2021')
             .setTitle(electionResult.GetMunicipality());
 
         for (const party of electionResult.GetParties()) {
