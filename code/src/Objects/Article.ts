@@ -5,14 +5,14 @@ import { NewsType } from '../Enums/NewsType';
 
 export default class LiveBlog {
 
-    private id:string;
-    private title:string;
-    private text:string;
-    private url:string;
-    private imageUrl:string;
-    private type:NewsType;
-    private categories:Array<ArticleCategories>;
-    private messages:Array<Message>;
+    private id: string;
+    private title: string;
+    private text: string;
+    private url: string;
+    private imageUrl: string;
+    private type: NewsType;
+    private categories: Array<ArticleCategories>;
+    private messages: Array<Message>;
 
     constructor() {
         this.categories = new Array<ArticleCategories>();
@@ -23,7 +23,7 @@ export default class LiveBlog {
         return this.id;
     }
 
-    public SetId(id:string) {
+    public SetId(id: string) {
         this.id = id;
     }
 
@@ -31,7 +31,7 @@ export default class LiveBlog {
         return this.title;
     }
 
-    public SetTitle(title:string) {
+    public SetTitle(title: string) {
         this.title = title;
     }
 
@@ -47,9 +47,9 @@ export default class LiveBlog {
     public GetIcon() {
         switch (this.type) {
             case NewsType.News:
-                return NOSConstants.ICONS.NEWS
+                return NOSConstants.ICONS.NEWS;
             case NewsType.Sport:
-                return NOSConstants.ICONS.SPORT
+                return NOSConstants.ICONS.SPORT;
         }
     }
 
@@ -57,7 +57,7 @@ export default class LiveBlog {
         return this.text;
     }
 
-    public SetText(text:string) {
+    public SetText(text: string) {
         this.text = text;
     }
 
@@ -65,11 +65,11 @@ export default class LiveBlog {
         return this.imageUrl;
     }
 
-    public SetImageUrl(imageUrl:string) {
+    public SetImageUrl(imageUrl: string) {
         this.imageUrl = imageUrl;
     }
 
-    public SetType(newsType:NewsType) {
+    public SetType(newsType: NewsType) {
         this.type = newsType;
     }
 
@@ -77,7 +77,7 @@ export default class LiveBlog {
         return this.url;
     }
 
-    public SetUrl(url:string) {
+    public SetUrl(url: string) {
         this.url = url;
     }
 
@@ -89,7 +89,7 @@ export default class LiveBlog {
         return this.categories.join(', ');
     }
 
-    public SetCategories(categories:Array<string>) {
+    public SetCategories(categories: Array<string>) {
         this.categories = new Array<ArticleCategories>();
 
         for (const category of categories) {
@@ -120,11 +120,11 @@ export default class LiveBlog {
         return this.messages;
     }
 
-    public SetMessages(messages:Array<Message>) {
+    public SetMessages(messages: Array<Message>) {
         this.messages = messages;
     }
 
-    public AddMessage(message:Message) {
+    public AddMessage(message: Message) {
         this.messages.push(message);
     }
 }

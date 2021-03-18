@@ -50,7 +50,7 @@ export default class NOSProvider {
         return matches;
     }
 
-    private static async GetLiveBlogsFromUrl(url: string, newsType:NewsType) {
+    private static async GetLiveBlogsFromUrl(url: string, newsType: NewsType) {
         const liveBlogs = new Array<LiveBlog>();
         const html = await this.GetHTML(url);
         var i = 0;
@@ -145,7 +145,7 @@ export default class NOSProvider {
         return liveBlogs;
     }
 
-    private static async GetArticlesFromHtml(html: string, newsType:NewsType) {
+    private static GetArticlesFromHtml(html: string, newsType: NewsType) {
         const articles = new Array<Article>();
 
         var i = 0;

@@ -11,4 +11,5 @@ export default class SettingsConstants {
     public static readonly CHANNEL_TECH_ID = process.env.CHANNEL_TECH_ID || '';
     public static readonly CHANNEL_CULTUUR_ID = process.env.CHANNEL_CULTUUR_ID || '';
     public static readonly CHANNEL_OPMERKELIJK_ID = process.env.CHANNEL_OPMERKELIJK_ID || '';
+    public static readonly CHANNEL_ELECTIONS_ID = process.env.CHANNEL_ELECTIONS_ID || '';
 }

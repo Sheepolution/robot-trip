@@ -9,7 +9,7 @@ export default class NOSEmbeds {
         const embed = new MessageEmbed()
             .setColor(NOSConstants.EMBED_COLOR)
             .setAuthor(liveBlog.GetTypeText(), liveBlog.GetIcon())
-            .setTitle(liveBlog.GetTitle())
+            .setTitle(liveBlog.GetTitle());
 
         const text = liveBlog.GetText();
         if (text != null) {

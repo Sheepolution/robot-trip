@@ -4,19 +4,19 @@ import { NewsType } from '../Enums/NewsType';
 
 export default class LiveBlog {
 
-    private id:string;
-    private title:string;
-    private firstText:string;
-    private text:string;
-    private type:NewsType;
-    private imageUrl:string;
-    private imageCaption:string;
-    private videoUrl:string;
-    private videoCaption:string;
-    private urls:Array<string>;
-    private seeAlsoList:Array<string>;
-    private oldTitles:Array<string>;
-    private message:Message;
+    private id: string;
+    private title: string;
+    private firstText: string;
+    private text: string;
+    private type: NewsType;
+    private imageUrl: string;
+    private imageCaption: string;
+    private videoUrl: string;
+    private videoCaption: string;
+    private urls: Array<string>;
+    private seeAlsoList: Array<string>;
+    private oldTitles: Array<string>;
+    private message: Message;
 
     constructor() {
         this.urls = new Array<string>();
@@ -28,7 +28,7 @@ export default class LiveBlog {
         return this.id;
     }
 
-    public SetId(id:string) {
+    public SetId(id: string) {
         this.id = id;
     }
 
@@ -36,7 +36,7 @@ export default class LiveBlog {
         return this.title;
     }
 
-    public SetTitle(title:string) {
+    public SetTitle(title: string) {
         if (this.title != null) {
             this.AddOldTitle(this.title);
         }
@@ -60,13 +60,13 @@ export default class LiveBlog {
     public GetIcon() {
         switch (this.type) {
             case NewsType.News:
-                return NOSConstants.ICONS.NEWS
+                return NOSConstants.ICONS.NEWS;
             case NewsType.Sport:
-                return NOSConstants.ICONS.SPORT
+                return NOSConstants.ICONS.SPORT;
         }
     }
 
-    public SetType(type:NewsType) {
+    public SetType(type: NewsType) {
         this.type = type;
     }
 
@@ -78,7 +78,7 @@ export default class LiveBlog {
         return this.text;
     }
 
-    public AddText(text:string) {
+    public AddText(text: string) {
         if (this.text == null) {
             this.firstText = text;
             this.text = text;
@@ -96,7 +96,7 @@ export default class LiveBlog {
         return this.imageUrl;
     }
 
-    public SetImageUrl(imageUrl:string) {
+    public SetImageUrl(imageUrl: string) {
         this.imageUrl = imageUrl;
     }
 
@@ -104,7 +104,7 @@ export default class LiveBlog {
         return this.imageCaption;
     }
 
-    public SetImageCaption(text:string) {
+    public SetImageCaption(text: string) {
         this.imageCaption = text;
     }
 
@@ -112,7 +112,7 @@ export default class LiveBlog {
         return this.videoUrl;
     }
 
-    public SetVideoUrl(videoUrl:string) {
+    public SetVideoUrl(videoUrl: string) {
         this.videoUrl = videoUrl;
     }
 
@@ -120,7 +120,7 @@ export default class LiveBlog {
         return this.videoCaption;
     }
 
-    public SetVideoCaption(text:string) {
+    public SetVideoCaption(text: string) {
         this.videoCaption = text;
     }
 
@@ -132,7 +132,7 @@ export default class LiveBlog {
         return this.urls.join('\n');
     }
 
-    public AddUrl(url:string) {
+    public AddUrl(url: string) {
         this.urls.push(url);
     }
 
@@ -144,7 +144,7 @@ export default class LiveBlog {
         return this.seeAlsoList.join('\n');
     }
 
-    public AddSeeAlso(seeAlso:string) {
+    public AddSeeAlso(seeAlso: string) {
         this.seeAlsoList.push(seeAlso);
     }
 
@@ -156,11 +156,11 @@ export default class LiveBlog {
         return this.oldTitles.join('\n');
     }
 
-    public AddOldTitle(oldTitle:string) {
+    public AddOldTitle(oldTitle: string) {
         this.oldTitles.push(oldTitle);
     }
 
-    public AddOldTitles(oldTitle:Array<string>) {
+    public AddOldTitles(oldTitle: Array<string>) {
         this.oldTitles = this.oldTitles.concat(oldTitle);
     }
 
@@ -168,7 +168,7 @@ export default class LiveBlog {
         return this.message;
     }
 
-    public SetMessage(message:Message) {
+    public SetMessage(message: Message) {
         this.message = message;
     }
 }

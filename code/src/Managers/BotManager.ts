@@ -9,50 +9,60 @@ import LiveBlog from '../Objects/LiveBlog';
 import { NewsType } from '../Enums/NewsType';
 import Article from '../Objects/Article';
 import { ArticleCategories } from '../Enums/NewsCategories';
+import ElectionProvider from '../Providers/ElectionsProvider';
+import ElectionEmbeds from '../Embeds/ElectionEmbeds';
 
 export default class BotManager {
 
-    private static liveBlogChannel:TextChannel;
-    private static sportsChannel:TextChannel;
-    private static overzichtChannel:TextChannel;
-    private static binnenlandChannel:TextChannel;
-    private static buitenlandChannel:TextChannel;
-    private static cultuurChannel:TextChannel;
-    private static economieChannel:TextChannel;
-    private static koningshuisChannel:TextChannel;
-    private static opmerkelijkChannel:TextChannel;
-    private static politiekChannel:TextChannel;
-    private static techChannel:TextChannel;
-    private static regionaalChannel:TextChannel;
+    private static liveBlogChannel: TextChannel;
+    private static sportsChannel: TextChannel;
+    private static overzichtChannel: TextChannel;
+    private static binnenlandChannel: TextChannel;
+    private static buitenlandChannel: TextChannel;
+    private static cultuurChannel: TextChannel;
+    private static economieChannel: TextChannel;
+    private static koningshuisChannel: TextChannel;
+    private static opmerkelijkChannel: TextChannel;
+    private static politiekChannel: TextChannel;
+    private static techChannel: TextChannel;
+    private static regionaalChannel: TextChannel;
+    private static electionsChannel: TextChannel;
 
     public static async OnReady() {
         console.log('Robot Trip: Connected');
-        BotManager.liveBlogChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CHANNEL_NEWS_ID);
-        BotManager.sportsChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CHANNEL_SPORTS_ID);
-        BotManager.overzichtChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CHANNEL_OVERZICHT_ID)
-        BotManager.binnenlandChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CHANNEL_BINNENLAND_ID)
-        BotManager.buitenlandChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CHANNEL_BUITENLAND_ID)
-        BotManager.cultuurChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CHANNEL_CULTUUR_ID)
-        BotManager.economieChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CHANNEL_ECONOMIE_ID)
-        BotManager.koningshuisChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CHANNEL_KONINGSHUIS_ID)
-        BotManager.opmerkelijkChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CHANNEL_OPMERKELIJK_ID)
-        BotManager.politiekChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CHANNEL_POLITIEK_ID)
-        BotManager.techChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CHANNEL_TECH_ID)
-        BotManager.regionaalChannel = <TextChannel> await DiscordService.FindChannelById(SettingsConstants.CHANNEL_REGIONAAL_ID)
+        BotManager.liveBlogChannel = <TextChannel>await DiscordService.FindChannelById(SettingsConstants.CHANNEL_NEWS_ID);
+        BotManager.sportsChannel = <TextChannel>await DiscordService.FindChannelById(SettingsConstants.CHANNEL_SPORTS_ID);
+        BotManager.overzichtChannel = <TextChannel>await DiscordService.FindChannelById(SettingsConstants.CHANNEL_OVERZICHT_ID);
+        BotManager.binnenlandChannel = <TextChannel>await DiscordService.FindChannelById(SettingsConstants.CHANNEL_BINNENLAND_ID);
+        BotManager.buitenlandChannel = <TextChannel>await DiscordService.FindChannelById(SettingsConstants.CHANNEL_BUITENLAND_ID);
+        BotManager.cultuurChannel = <TextChannel>await DiscordService.FindChannelById(SettingsConstants.CHANNEL_CULTUUR_ID);
+        BotManager.economieChannel = <TextChannel>await DiscordService.FindChannelById(SettingsConstants.CHANNEL_ECONOMIE_ID);
+        BotManager.koningshuisChannel = <TextChannel>await DiscordService.FindChannelById(SettingsConstants.CHANNEL_KONINGSHUIS_ID);
+        BotManager.opmerkelijkChannel = <TextChannel>await DiscordService.FindChannelById(SettingsConstants.CHANNEL_OPMERKELIJK_ID);
+        BotManager.politiekChannel = <TextChannel>await DiscordService.FindChannelById(SettingsConstants.CHANNEL_POLITIEK_ID);
+        BotManager.techChannel = <TextChannel>await DiscordService.FindChannelById(SettingsConstants.CHANNEL_TECH_ID);
+        BotManager.regionaalChannel = <TextChannel>await DiscordService.FindChannelById(SettingsConstants.CHANNEL_REGIONAAL_ID);
+        BotManager.electionsChannel = <TextChannel>await DiscordService.FindChannelById(SettingsConstants.CHANNEL_ELECTIONS_ID);
 
         await NOSProvider.GetLatestLiveBlogs();
         await NOSProvider.GetLatestSportLiveBlogs();
         await NOSProvider.GetLatestArticles();
+        await ElectionProvider.GetPartyNames();
+        await ElectionProvider.GetElectionResultsMunicipalities();
 
         setInterval(async () => {
             BotManager.SendNewsLiveBlogs();
             await Utils.Sleep(7);
             BotManager.SendNewsArticles();
-        }, Utils.GetMinutesInMiliSeconds(2))
+        }, Utils.GetMinutesInMiliSeconds(2));
 
         setInterval(() => {
             BotManager.SendSportLiveBlogs();
-        }, Utils.GetMinutesInMiliSeconds(5))
+        }, Utils.GetMinutesInMiliSeconds(5));
+
+        setInterval(() => {
+            BotManager.SendElectionResults();
+        }, Utils.GetMinutesInMiliSeconds(2));
     }
 
     public static GetLiveBlogChannel() {
@@ -61,6 +71,10 @@ export default class BotManager {
 
     public static GetSportsChannel() {
         return BotManager.sportsChannel;
+    }
+
+    public static GetElectionsChannel() {
+        return BotManager.electionsChannel;
     }
 
     public static async SendNewsLiveBlogs() {
@@ -78,7 +92,17 @@ export default class BotManager {
         this.SendArticles(articles);
     }
 
-    private static async SendLiveBlogs(liveBlogs:Array<LiveBlog>) {
+    public static async SendElectionResults() {
+        const electionResults = (await ElectionProvider.GetLatestElectionResults()).reverse();
+        for (const electionResult of electionResults) {
+            const message = await MessageService.SendMessageToElectionsChannel('', ElectionEmbeds.GetElectionResultEmbed(electionResult));
+            await Utils.Sleep(2);
+            await message.crosspost();
+            await Utils.Sleep(15);
+        }
+    }
+
+    private static async SendLiveBlogs(liveBlogs: Array<LiveBlog>) {
         for (const liveBlog of liveBlogs) {
             const oldMessage = liveBlog.GetMessage();
 
@@ -91,7 +115,7 @@ export default class BotManager {
             const oldMessage = liveBlog.GetMessage();
 
             if (oldMessage == null) {
-                var message:Message;
+                var message: Message;
                 if (liveBlog.GetType() == NewsType.News) {
                     message = await MessageService.SendMessageToLiveBlogChannel('', NOSEmbeds.GetLiveBlogEmbed(liveBlog));
                 } else {
@@ -105,7 +129,7 @@ export default class BotManager {
 
                 const urls = liveBlog.GetUrlsAsText();
                 if (urls.length > 0) {
-                    var additionalMessage:Message;
+                    var additionalMessage: Message;
                     if (liveBlog.GetType() == NewsType.News) {
                         additionalMessage = await MessageService.SendMessageToLiveBlogChannel(urls);
                     } else {
@@ -121,7 +145,7 @@ export default class BotManager {
         }
     }
 
-    private static async SendArticles(articles:Array<Article>) {
+    private static async SendArticles(articles: Array<Article>) {
         for (const article of articles) {
             const oldMessages = article.GetMessages();
 
@@ -134,7 +158,7 @@ export default class BotManager {
                 const embed = NOSEmbeds.GetArticleEmbed(article);
 
                 for (const category of article.GetCategories()) {
-                    var channel:TextChannel;
+                    var channel: TextChannel;
 
                     switch (category) {
                         case ArticleCategories.Binnenland:
