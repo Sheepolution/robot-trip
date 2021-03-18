@@ -47,8 +47,6 @@ export default class BotManager {
         await NOSProvider.GetLatestLiveBlogs();
         await NOSProvider.GetLatestSportLiveBlogs();
         await NOSProvider.GetLatestArticles();
-        await ElectionProvider.GetPartyNames();
-        await ElectionProvider.GetElectionResultsMunicipalities();
 
         setInterval(async () => {
             BotManager.SendNewsLiveBlogs();
@@ -59,10 +57,6 @@ export default class BotManager {
         setInterval(() => {
             BotManager.SendSportLiveBlogs();
         }, Utils.GetMinutesInMiliSeconds(5));
-
-        setInterval(() => {
-            BotManager.SendElectionResults();
-        }, Utils.GetMinutesInMiliSeconds(2));
     }
 
     public static GetLiveBlogChannel() {
