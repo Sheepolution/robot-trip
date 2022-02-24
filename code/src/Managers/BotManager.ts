@@ -31,7 +31,6 @@ export default class BotManager {
     public static async OnReady() {
         console.log('Robot Trip: Connected');
         BotManager.liveBlogChannel = <TextChannel>await DiscordService.FindChannelById(SettingsConstants.CHANNEL_NEWS_ID);
-        BotManager.sportsChannel = <TextChannel>await DiscordService.FindChannelById(SettingsConstants.CHANNEL_SPORTS_ID);
         BotManager.overzichtChannel = <TextChannel>await DiscordService.FindChannelById(SettingsConstants.CHANNEL_OVERZICHT_ID);
         BotManager.binnenlandChannel = <TextChannel>await DiscordService.FindChannelById(SettingsConstants.CHANNEL_BINNENLAND_ID);
         BotManager.buitenlandChannel = <TextChannel>await DiscordService.FindChannelById(SettingsConstants.CHANNEL_BUITENLAND_ID);
@@ -45,7 +44,6 @@ export default class BotManager {
         BotManager.electionsChannel = <TextChannel>await DiscordService.FindChannelById(SettingsConstants.CHANNEL_ELECTIONS_ID);
 
         await NOSProvider.GetLatestLiveBlogs();
-        await NOSProvider.GetLatestSportLiveBlogs();
         await NOSProvider.GetLatestArticles();
 
         setInterval(async () => {
@@ -54,9 +52,13 @@ export default class BotManager {
             BotManager.SendNewsArticles();
         }, Utils.GetMinutesInMiliSeconds(2));
 
-        setInterval(() => {
-            BotManager.SendSportLiveBlogs();
-        }, Utils.GetMinutesInMiliSeconds(5));
+        if (SettingsConstants.CHANNEL_SPORTS_ID) {
+            BotManager.sportsChannel = <TextChannel>await DiscordService.FindChannelById(SettingsConstants.CHANNEL_SPORTS_ID);
+            await NOSProvider.GetLatestSportLiveBlogs();
+            setInterval(() => {
+                BotManager.SendSportLiveBlogs();
+            }, Utils.GetMinutesInMiliSeconds(5));
+        }
     }
 
     public static GetLiveBlogChannel() {
