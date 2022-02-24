@@ -9,8 +9,6 @@ import LiveBlog from '../Objects/LiveBlog';
 import { NewsType } from '../Enums/NewsType';
 import Article from '../Objects/Article';
 import { ArticleCategories } from '../Enums/NewsCategories';
-import ElectionProvider from '../Providers/ElectionsProvider';
-import ElectionEmbeds from '../Embeds/ElectionEmbeds';
 
 export default class BotManager {
 
@@ -26,7 +24,6 @@ export default class BotManager {
     private static politiekChannel: TextChannel;
     private static techChannel: TextChannel;
     private static regionaalChannel: TextChannel;
-    private static electionsChannel: TextChannel;
 
     public static async OnReady() {
         console.log('Robot Trip: Connected');
@@ -68,10 +65,6 @@ export default class BotManager {
         return BotManager.sportsChannel;
     }
 
-    public static GetElectionsChannel() {
-        return BotManager.electionsChannel;
-    }
-
     public static async SendNewsLiveBlogs() {
         const liveBlogs = (await NOSProvider.GetLatestLiveBlogs()).reverse();
         this.SendLiveBlogs(liveBlogs);
@@ -85,16 +78,6 @@ export default class BotManager {
     public static async SendNewsArticles() {
         const articles = (await NOSProvider.GetLatestArticles()).reverse();
         this.SendArticles(articles);
-    }
-
-    public static async SendElectionResults() {
-        const electionResults = (await ElectionProvider.GetLatestElectionResults()).reverse();
-        for (const electionResult of electionResults) {
-            const message = await MessageService.SendMessageToElectionsChannel('', ElectionEmbeds.GetElectionResultEmbed(electionResult));
-            await Utils.Sleep(2);
-            await message.crosspost();
-            await Utils.Sleep(15);
-        }
     }
 
     private static async SendLiveBlogs(liveBlogs: Array<LiveBlog>) {
