@@ -41,7 +41,6 @@ export default class BotManager {
         BotManager.politiekChannel = <TextChannel>await DiscordService.FindChannelById(SettingsConstants.CHANNEL_POLITIEK_ID);
         BotManager.techChannel = <TextChannel>await DiscordService.FindChannelById(SettingsConstants.CHANNEL_TECH_ID);
         BotManager.regionaalChannel = <TextChannel>await DiscordService.FindChannelById(SettingsConstants.CHANNEL_REGIONAAL_ID);
-        BotManager.electionsChannel = <TextChannel>await DiscordService.FindChannelById(SettingsConstants.CHANNEL_ELECTIONS_ID);
 
         await NOSProvider.GetLatestLiveBlogs();
         await NOSProvider.GetLatestArticles();
