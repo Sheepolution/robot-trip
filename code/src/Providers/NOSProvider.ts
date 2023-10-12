@@ -35,11 +35,12 @@ export default class NOSProvider {
     }
 
     public static async GetLatestArticles() {
-        return (await this.GetArticlesFromHtml(this.newsHtml, NewsType.News)).reverse();
+        const html = await this.GetNewsPageHTML();
+        return this.GetArticlesFromHtml(html, NewsType.News).reverse();
     }
 
     private static async GetLiveBlogUrls() {
-        const html = await this.GetNewsPageHTML();
+        const html = await this.GetHomePageHTML();
         const matches: Array<string> = Array.from(new Set(html.match(/(?<=href=")\/(liveblog\/\d+?-|collectie\/\d+?\/liveblog\/).+?(?=")/g)));
         return matches;
     }
@@ -54,7 +55,7 @@ export default class NOSProvider {
         const liveBlogs = new Array<LiveBlog>();
         const html = await this.GetHTML(url);
         var i = 0;
-        for (const liveBlogHTML of $(html).find('.liveblog__update')) {
+        for (const liveBlogHTML of $(html).find('[id^=UPDATE-container]')) {
             i += 1;
             if (i >= 6) {
                 break;
@@ -63,15 +64,14 @@ export default class NOSProvider {
             const blogQuery = $(liveBlogHTML);
             var liveBlog = new LiveBlog();
             const id = blogQuery.attr('id').substr('UPDATE-container-'.length);
-            const title = blogQuery.find('.liveblog__update__title.js-liveblog-update-title').text();
-            const body = blogQuery.find('.liveblog__elements');
+            const title = blogQuery.find('h2').text();
 
             liveBlog.SetId(id);
             liveBlog.SetTitle(title);
             liveBlog.SetType(newsType);
 
-            for (const child of body.children()) {
-                const childQuery = $(child);
+            for (const child of $(liveBlogHTML).children()) {
+                const childQuery = $(child).children().first();
                 if (childQuery.is('p')) {
                     var paragraph = childQuery.text();
                     for (const aTag of childQuery.find('a')) {
@@ -83,7 +83,7 @@ export default class NOSProvider {
 
                     liveBlog.AddText(paragraph);
                 } else if (childQuery.is('div')) {
-                    if (childQuery.hasClass('block_image')) {
+                    if (childQuery.has('picture')) {
                         const imgUrl = childQuery.find('img').attr('src');
                         const imageCaption = childQuery.find('.caption_content').text().replaceAll('\\n', '').trim();
                         liveBlog.SetImageUrl(imgUrl);
@@ -149,7 +149,7 @@ export default class NOSProvider {
         const articles = new Array<Article>();
 
         var i = 0;
-        for (const listHtml of $(html).find('.list-items__item')) {
+        for (const listHtml of $(html).find('a[href^="/artikel/"]')) {
             i += 1;
             if (i >= 6) {
                 break;
@@ -157,11 +157,11 @@ export default class NOSProvider {
 
             const articleQuery = $(listHtml);
             var article = new Article();
-            const url = articleQuery.find('a').attr('href');
-            const title = articleQuery.find('.list-items__title').text();
-            const text = articleQuery.find('.list-items__description').text();
-            const imgUrl = articleQuery.find('.list-items__image').attr('src');
-            const categories = articleQuery.find('.list-items__category').text().slice(2).trim().replace(/[\s]{2,}/g, '_').replace(',', '').split('_');
+            const url = articleQuery.attr('href');
+            const title = articleQuery.find('h2').text();
+            const text = articleQuery.find('p').text();
+            const imgUrl = articleQuery.find('img').attr('src');
+            const categories: any[] = [];
 
             if (!url.startsWith('/artikel/')) {
                 continue;
@@ -197,6 +197,11 @@ export default class NOSProvider {
         return articles;
     }
 
+    private static async GetHomePageHTML() {
+        const html = await this.GetHTML(`${NOSConstants.BASE_URL}`);
+        return html;
+    }
+
     private static async GetNewsPageHTML() {
         const html = await this.GetHTML(`${NOSConstants.BASE_URL}/nieuws/`);
         this.newsHtml = html;
@@ -209,7 +214,9 @@ export default class NOSProvider {
 
     private static async GetHTML(url: string) {
         var response = await fetch(url);
-        var html = await response.text();
-        return html;
+        if (response.ok) {
+            const html = await response.text();
+            return html;
+        }
     }
 }
