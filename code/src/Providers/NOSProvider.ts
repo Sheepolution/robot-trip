@@ -54,6 +54,14 @@ export default class NOSProvider {
     private static async GetLiveBlogsFromUrl(url: string, newsType: NewsType) {
         const liveBlogs = new Array<LiveBlog>();
         const html = await this.GetHTML(url);
+
+        if (newsType == NewsType.News) {
+            if ($(html).find('spand:contains:("NOS Voetbal")').length > 0
+            || $(html).find('spand:contains:("NOS Sport")').length > 0) {
+                return liveBlogs;
+            }
+        }
+
         var i = 0;
         for (const liveBlogHTML of $(html).find('[id^=UPDATE-container]')) {
             i += 1;
