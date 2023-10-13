@@ -56,8 +56,8 @@ export default class NOSProvider {
         const html = await this.GetHTML(url);
 
         if (newsType == NewsType.News) {
-            if ($(html).find('spand:contains:("NOS Voetbal")').length > 0
-            || $(html).find('spand:contains:("NOS Sport")').length > 0) {
+            if ($(html).find('span:contains("NOS Voetbal")').length > 0
+            || $(html).find('span:contains("NOS Sport")').length > 0) {
                 return liveBlogs;
             }
         }
