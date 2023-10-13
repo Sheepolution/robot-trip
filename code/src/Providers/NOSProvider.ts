@@ -88,30 +88,20 @@ export default class NOSProvider {
                         const imageCaption = childQuery.find('.caption_content').text().replaceAll('\\n', '').trim();
                         liveBlog.SetImageUrl(imgUrl);
                         liveBlog.SetImageCaption(imageCaption);
-                    } else if (childQuery.hasClass('block_video')) {
-                        const imgUrl = childQuery.find('img').attr('src');
-                        const videoUrl = childQuery.find('.video-play').find('a').attr('href');
-                        const videoCaption = childQuery.find('.caption_content').text().replaceAll('\\n', '').trim();
+                    } else if (childQuery.has('button')) {
+                        const video = childQuery.find('button').parent().parent();
+                        const imgUrl = video.find('img').attr('src');
                         liveBlog.SetImageUrl(imgUrl);
-                        liveBlog.SetVideoUrl(`${NOSConstants.BASE_URL}${videoUrl}`);
-                        liveBlog.SetVideoCaption(`[${videoCaption}](${NOSConstants.BASE_URL}${videoUrl})`);
-                    } else if (childQuery.hasClass('list-also-see')) {
-                        for (const seeAlso of childQuery.find('.block__link.internallink')) {
+                        liveBlog.SetVideoUrl(`${url}#UPDATE-container${id}`);
+                    } else if (childQuery.has('ul')) {
+                        for (const seeAlso of childQuery.find('li')) {
                             const seeAlsoQuery = $(seeAlso);
-                            const url = seeAlsoQuery.find('a').first().attr('href');
-                            const text = seeAlsoQuery.find('.list-latest__content.internallink__link').text();
-                            liveBlog.AddSeeAlso(`[${text}](${NOSConstants.BASE_URL}${url})`);
+                            if (seeAlsoQuery.find('> a:first-child').length > 0) {
+                                const url = seeAlsoQuery.find('a').first().attr('href');
+                                const text = seeAlsoQuery.find('span').text();
+                                liveBlog.AddSeeAlso(`[${text}](${NOSConstants.BASE_URL}${url})`);
+                            }
                         }
-                    } else if (childQuery.hasClass('block_largecenter')) {
-                        const imgUrl = childQuery.find('.media-full').attr('src');
-                        const imageCaption = childQuery.find('.caption_content').find('.space-right').text().replaceAll('\\n', '').trim();
-                        const videoUrl = childQuery.find('.video-play').find('a').attr('href');
-                        if (videoUrl != null) {
-                            liveBlog.SetVideoUrl(videoUrl);
-                            liveBlog.SetVideoCaption(imageCaption);
-                        }
-                        liveBlog.SetImageUrl(imgUrl);
-                        liveBlog.SetImageCaption(imageCaption);
                     } else {
                         const externalLink = childQuery.find('a[class*="ext-"]').first();
                         if (externalLink.length > 0) {
