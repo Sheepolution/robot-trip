@@ -36,7 +36,7 @@ export default class NOSProvider {
 
     public static async GetLatestArticles() {
         const html = await this.GetNewsPageHTML();
-        return this.GetArticlesFromHtml(html, NewsType.News).reverse();
+        return  (await this.GetArticlesFromHtml(html, NewsType.News)).reverse();
     }
 
     private static async GetLiveBlogUrls() {
@@ -143,7 +143,7 @@ export default class NOSProvider {
         return liveBlogs;
     }
 
-    private static GetArticlesFromHtml(html: string, newsType: NewsType) {
+    private static async GetArticlesFromHtml(html: string, newsType: NewsType) {
         const articles = new Array<Article>();
 
         var i = 0;
@@ -181,6 +181,17 @@ export default class NOSProvider {
                 article.SetMessages(previous.GetMessages());
                 var previousIndex = this.previousArticles.indexOf(previous);
                 this.previousArticles.splice(previousIndex, 1);
+            }
+
+            const content = await this.GetHTML(`${NOSConstants.BASE_URL}${url}`);
+            const match = content.match(/target="_self" href="\/nieuws\/[^"]+"/g);
+
+            if (match != null) {
+                for (const category of match) {
+                    const categoryUrl = category.substring('target="_self" href="'.length, category.length - 1);
+                    const categoryName = categoryUrl.substring('/nieuws/'.length, categoryUrl.length);
+                    categories.push(categoryName);
+                }
             }
 
             article.SetType(newsType);

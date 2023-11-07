@@ -94,23 +94,23 @@ export default class LiveBlog {
 
         for (const category of categories) {
             switch (category) {
-                case 'Binnenland': this.categories.push(ArticleCategories.Binnenland);
+                case 'binnenland': this.categories.push(ArticleCategories.Binnenland);
                     break;
-                case 'Buitenland': this.categories.push(ArticleCategories.Buitenland);
+                case 'buitenland': this.categories.push(ArticleCategories.Buitenland);
                     break;
-                case 'Regionaal nieuws': this.categories.push(ArticleCategories.Regionaal);
+                case 'regio': this.categories.push(ArticleCategories.Regionaal);
                     break;
-                case 'Politiek': this.categories.push(ArticleCategories.Politiek);
+                case 'politiek': this.categories.push(ArticleCategories.Politiek);
                     break;
-                case 'Economie': this.categories.push(ArticleCategories.Economie);
+                case 'economie': this.categories.push(ArticleCategories.Economie);
                     break;
-                case 'Koningshuis': this.categories.push(ArticleCategories.Koningshuis);
+                case 'koningshuis': this.categories.push(ArticleCategories.Koningshuis);
                     break;
-                case 'Tech': this.categories.push(ArticleCategories.Tech);
+                case 'tech': this.categories.push(ArticleCategories.Tech);
                     break;
-                case 'Cultuur & Media': this.categories.push(ArticleCategories.Cultuur);
+                case 'cultuur-en-media': this.categories.push(ArticleCategories.Cultuur);
                     break;
-                case 'Opmerkelijk': this.categories.push(ArticleCategories.Opmerkelijk);
+                case 'opmerkelijk': this.categories.push(ArticleCategories.Opmerkelijk);
                     break;
             }
         }
