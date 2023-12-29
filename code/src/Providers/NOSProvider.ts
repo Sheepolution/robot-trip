@@ -57,6 +57,7 @@ export default class NOSProvider {
 
         if (newsType == NewsType.News) {
             if ($(html).find('span:contains("NOS Voetbal")').length > 0
+            || $(html).find('span:contains("NOS Schaatsen")').length > 0
             || $(html).find('span:contains("NOS Sport")').length > 0) {
                 return liveBlogs;
             }
