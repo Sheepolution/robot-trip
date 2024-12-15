@@ -186,15 +186,14 @@ export default class NOSProvider {
             }
 
             const content = await this.GetHTML(`${NOSConstants.BASE_URL}${url}`);
-            const match = content.match(/target="_self" href="\/nieuws\/[^"]+"/g);
-
-            if (match != null) {
-                for (const category of match) {
-                    const categoryUrl = category.substring('target="_self" href="'.length, category.length - 1);
-                    const categoryName = categoryUrl.substring('/nieuws/'.length, categoryUrl.length);
+            const categoryElements = $(content).find('#content > div > div > ul > li > a');
+            categoryElements.each((index: number, element: any) => {
+                const href = $(element).attr('href');
+                if (href && href.startsWith('/nieuws/')) {
+                    const categoryName = href.split('/').pop();
                     categories.push(categoryName);
                 }
-            }
+            });
 
             article.SetType(newsType);
             article.SetCategories(categories);
