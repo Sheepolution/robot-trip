@@ -65,7 +65,7 @@ export default class NOSProvider {
         }
 
         var i = 0;
-        for (const liveBlogHTML of $(html).find('[id^=UPDATE-container]')) {
+        for (const liveBlogHTML of $(html).find('[id^=UPDATE-]')) {
             i += 1;
             if (i >= 6) {
                 break;
@@ -73,7 +73,7 @@ export default class NOSProvider {
 
             const blogQuery = $(liveBlogHTML);
             var liveBlog = new LiveBlog();
-            const id = blogQuery.attr('id').substr('UPDATE-container-'.length);
+            const id = blogQuery.attr('id').substr('UPDATE-'.length);
             const title = blogQuery.find('h2').text();
 
             liveBlog.SetId(id);
