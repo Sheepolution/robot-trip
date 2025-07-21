@@ -213,13 +213,13 @@ export default class NOSProvider {
     }
 
     private static async GetNewsPageHTML() {
-        const html = await this.GetHTML(`${NOSConstants.BASE_URL}/nieuws/`);
+        const html = await this.GetHTML(`${NOSConstants.BASE_URL}/nieuws/laatste`);
         this.newsHtml = html;
         return html;
     }
 
     private static async GetSportsPageHTML() {
-        return await this.GetHTML(`${NOSConstants.BASE_URL}/sport/`);
+        return await this.GetHTML(`${NOSConstants.BASE_URL}/sport/laatste`);
     }
 
     private static async GetHTML(url: string) {
