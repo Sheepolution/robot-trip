@@ -3,7 +3,7 @@ import NOSConstants from '../Constants/NOSConstants';
 import { ArticleCategories } from '../Enums/NewsCategories';
 import { NewsType } from '../Enums/NewsType';
 
-export default class LiveBlog {
+export default class Article {
 
     private id: string;
     private title: string;

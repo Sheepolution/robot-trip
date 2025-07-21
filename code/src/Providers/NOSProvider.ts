@@ -167,7 +167,7 @@ export default class NOSProvider {
                 continue;
             }
 
-            const id = url.substring('/artikel/'.length, url.indexOf('-'));
+            const id = url.substring('/artikel/'.length);
 
             article.SetId(id);
             article.SetTitle(title);
