@@ -167,7 +167,7 @@ export default class NOSProvider {
                 continue;
             }
 
-            const id = url.substring('/artikel/'.length);
+            const id = url.match(/\/artikel\/(\d+)/)?.[1];
 
             article.SetId(id);
             article.SetTitle(title);
