@@ -36,7 +36,7 @@ export default class NOSProvider {
 
     public static async GetLatestArticles() {
         const html = await this.GetNewsPageHTML();
-        return  (await this.GetArticlesFromHtml(html, NewsType.News)).reverse();
+        return (await this.GetArticlesFromHtml(html, NewsType.News)).reverse();
     }
 
     private static async GetLiveBlogUrls() {
@@ -57,9 +57,9 @@ export default class NOSProvider {
 
         if (newsType == NewsType.News) {
             if ($(html).find('span:contains("NOS Voetbal")').length > 0
-            || $(html).find('span:contains("NOS Schaatsen")').length > 0
-            || $(html).find('span:contains("NOS Wielrennen")').length > 0
-            || $(html).find('span:contains("NOS Sport")').length > 0) {
+                || $(html).find('span:contains("NOS Schaatsen")').length > 0
+                || $(html).find('span:contains("NOS Wielrennen")').length > 0
+                || $(html).find('span:contains("NOS Sport")').length > 0) {
                 return liveBlogs;
             }
         }
@@ -158,8 +158,8 @@ export default class NOSProvider {
             const articleQuery = $(listHtml);
             var article = new Article();
             const url = articleQuery.attr('href');
-            const title = articleQuery.find('h2').text();
-            const text = articleQuery.find('p').text();
+            const title = articleQuery.find('p[class^=ListItem-style__Title]').text();
+            const text = articleQuery.find('p[class=^=ListItem-style__Description]').text();
             const imgUrl = articleQuery.find('img').attr('src');
             const categories: any[] = [];
 
