@@ -159,7 +159,7 @@ export default class NOSProvider {
             var article = new Article();
             const url = articleQuery.attr('href');
             const title = articleQuery.find('p[class^=ListItem-style__Title]').text();
-            const text = articleQuery.find('p[class=^=ListItem-style__Description]').text();
+            const text = articleQuery.find('p[class^=ListItem-style__Description]').text();
             const imgUrl = articleQuery.find('img').attr('src');
             const categories: any[] = [];
 
